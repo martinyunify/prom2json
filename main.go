@@ -205,16 +205,21 @@ func main() {
 		log.Fatalf("Usage: %s METRICS_URL\n with TLS client authentication: %s -cert=/path/to/certificate -key=/path/to/key METRICS_URL", os.Args[0], os.Args[0])
 	}
 	go fetchMetricFamilies(flag.Args()[0], mfChan, *cert, *key)
-	result := []*metricFamily{}
-	for mf := range mfChan {
-		result = append(result, newMetricFamily(mf))
+//	result := []*metrichomeFamily{}
+	result := map[string]float64{}
+	for dtoMF := range mfChan {
+		if dtoMF.GetType() != dto.MetricType_SUMMARY && dtoMF.GetType() != dto.MetricType_HISTOGRAM {
+			result[dtoMF.GetName()] = getValue(dtoMF.GetMetric()[0])
+		}
+//		result = append(result, newMetricFamily(mf))
 	}
-	json, err := json.Marshal(result)
-	if err != nil {
-		log.Fatalln("error marshaling JSON:", err)
-	}
-	if _, err := os.Stdout.Write(json); err != nil {
-		log.Fatalln("error writing to stdout:", err)
-	}
+	json, _ := json.Marshal(result)
+//	if err != nil {
+//		log.Fatalln("error marshaling JSON:", err)
+//	}
+//	if _, err := os.Stdout.Write(json); err != nil {
+//		log.Fatalln("error writing to stdout:", err)
+//	}
+	fmt.Print(string(json))
 	fmt.Println()
 }
