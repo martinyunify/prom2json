@@ -23,7 +23,7 @@ import (
 	"net/http"
 	"os"
 	"runtime"
-
+	"strconv"
 	"github.com/matttproud/golang_protobuf_extensions/pbutil"
 	"github.com/prometheus/common/expfmt"
 	"github.com/prometheus/log"
@@ -206,10 +206,10 @@ func main() {
 	}
 	go fetchMetricFamilies(flag.Args()[0], mfChan, *cert, *key)
 //	result := []*metrichomeFamily{}
-	result := map[string]float64{}
+	result := map[string]string{}
 	for dtoMF := range mfChan {
 		if dtoMF.GetType() != dto.MetricType_SUMMARY && dtoMF.GetType() != dto.MetricType_HISTOGRAM {
-			result[dtoMF.GetName()] = getValue(dtoMF.GetMetric()[0])
+			result[dtoMF.GetName()] = strconv.FormatFloat(getValue(dtoMF.GetMetric()[0]), 'f', -1, 64)
 		}
 //		result = append(result, newMetricFamily(mf))
 	}
