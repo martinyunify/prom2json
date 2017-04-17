@@ -26,3 +26,5 @@ _testmain.go
 .build
 /prom2json
 *-stamp
+.idea/
+**.iml
