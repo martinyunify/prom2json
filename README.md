@@ -64,13 +64,6 @@ Example query to retrieve the number of metrics in the `http_requests_total` met
 
     $ prom2json http://my-prometheus-client.example.org:8080/metrics | jq '.[]|select(.name=="http_requests_total")|.metrics|length'
 
-# JSON format
-
-Note that all numbers are encoded as strings. Some parsers want it
-that way. Also, Prometheus allows sample values like `NaN` or `+Inf`,
-which cannot be encoded as JSON numbers.
-
-
 ## Using Docker
 
 You can deploy this tool using the [prom/prom2json](https://registry.hub.docker.com/u/prom/prom2json/) Docker image.
